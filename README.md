@@ -65,58 +65,6 @@ git config --list
 
 ---
 
-## Generate SSH Keys and Connect to GitHub
-
-> Only do this once per machine.
-
-1. Generate a new SSH key:
-
-```bash
-ssh-keygen -t ed25519 -C "your_email@example.com"
-```
-
-(Press Enter at all prompts.)
-
-2. Start the SSH agent:
-
-```bash
-eval "$(ssh-agent -s)"
-```
-
-3. Add the SSH private key to the agent:
-
-```bash
-ssh-add ~/.ssh/id_ed25519
-```
-
-4. Copy your SSH public key:
-
-- **Mac/Linux:**
-
-```bash
-cat ~/.ssh/id_ed25519.pub | pbcopy
-```
-
-- **Windows (Git Bash):**
-
-```bash
-cat ~/.ssh/id_ed25519.pub | clip
-```
-
-5. Add the key to your GitHub account:
-   - Go to [GitHub SSH Settings](https://github.com/settings/keys)
-   - Click **New SSH Key**, paste the key, save.
-
-6. Test the connection:
-
-```bash
-ssh -T git@github.com
-```
-
-You should see a success message.
-
----
-
 # 🧩 3. Clone the Repository
 
 Now you can safely clone the course project:
@@ -216,25 +164,60 @@ docker run -it --rm <image-name>
 
 # 7. Running Tests Locally
 
-Make sure your virtual environment is activated and dependencies are installed.
+To run the test suite locally, follow these steps.
 
-Run all tests using:
+## Clone the repository
 
+```bash
+git clone <your-github-repository-url>
+cd assignment11
+```
+
+## Create and activate a virtual environment
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+## Install dependencies
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+## Configure the database
+
+Make sure PostgreSQL is installed and running. Configure the DATABASE_URL environment variable to point to your PostgreSQL database.
+
+For example:
+```bash
+export DATABASE_URL="postgresql://user:password@localhost:5432/mytestdb"
+```
+On Windows PowerShell:
+```bash
+$env:DATABASE_URL="postgresql://user:password@localhost:5432/mytestdb"
+```
+Use your own PostgreSQL credentials and database name.
+
+## Run the tests
+
+Run the complete test suite:
 ```bash
 pytest
 ```
-
-To run tests with verbose output:
-
+To run individual test categories:
 ```bash
-pytest -v
+pytest tests/unit/
+pytest tests/integration/
+pytest tests/e2e/
 ```
-
-To run a specific test file (example test_user.py):
-
+To generate a test coverage report:
 ```bash
-pytest tests/test_user.py
+pytest --cov=app --cov-report=term-missing
 ```
+The test suite includes unit tests, integration tests, and end-to-end tests for the calculator application, user functionality, calculation models, and Pydantic schema validation.
+
+Note: Integration tests require a properly configured PostgreSQL database. End-to-end tests also require the application server and Playwright browser dependencies to be available.
 
 ---
 
@@ -247,7 +230,7 @@ The Docker image is available on Docker Hub:
 Pull the image:
 
 ```bash
-docker pull ps223/assignment10
+docker pull ps223/assignment11
 ```
 
 ---
