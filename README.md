@@ -225,7 +225,7 @@ Note: Integration tests require a properly configured PostgreSQL database. End-t
 
 The Docker image is available on Docker Hub:
 
-[LINK]
+https://hub.docker.com/r/ps223/assignment11
 
 Pull the image:
 
